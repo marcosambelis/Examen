@@ -54,4 +54,12 @@ public class Cocina {
         }
         System.out.println("-----------------------------------------------\n");
     }
+
+    public Orden[] getOrdenesPendientes() {
+        return ordenesPendientes;
+    }
+
+    public int getTotalOrdenes() {
+        return totalOrdenes;
+    }
 }

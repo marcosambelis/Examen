@@ -1,161 +1,214 @@
-import java.util.Scanner;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 
 public class Main {
+    static Cocina cocina = new Cocina();
+    static int contadorOrden = 1;
+    static TipoMasa masaActual = TipoMasa.CLASICA;
+    static TipoSalsa salsaActual = TipoSalsa.NORMAL;
+    static Pizza pizzaActual = new Pizza(masaActual, salsaActual);
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Cocina cocina = new Cocina();
-        int contadorOrden = 1;
+        JFrame ventana = new JFrame("Jack Pizza Place");
+        ventana.setSize(800, 520);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setLocationRelativeTo(null);
+        ventana.setLayout(new GridLayout(1, 2, 10, 10));
 
-        System.out.println("=========================================");
-        System.out.println("         JACK PIZZA PLACE               ");
-        System.out.println("=========================================");
+        JPanel panelIzquierdo = new JPanel();
+        panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.Y_AXIS));
 
-        int opcion = -1;
-        while (opcion != 0) {
-            System.out.println("\n--- MENÚ PRINCIPAL ---");
-            System.out.println("1. Crear orden y mandar a cocina");
-            System.out.println("2. Cocinar siguiente orden");
-            System.out.println("3. Ver órdenes pendientes en cocina");
-            System.out.println("4. Demostración de sobrecarga (Overloading)");
-            System.out.println("0. Salir");
-            System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
-            scanner.nextLine();
+        JPanel panelDerecho = new JPanel(new BorderLayout(5, 5));
+        panelDerecho.setBorder(BorderFactory.createTitledBorder("Registro"));
 
-            switch (opcion) {
-                case 1:
-                    if (!cocina.hayEspacio()) {
-                        System.out.println("❌ No se pueden recibir más pedidos. La cocina está llena (5/5).");
-                        break;
-                    }
+        JPanel panelCliente = new JPanel(new BorderLayout());
+        panelCliente.setBorder(BorderFactory.createTitledBorder("Cliente"));
+        JTextField txtCliente = new JTextField();
+        panelCliente.add(txtCliente, BorderLayout.CENTER);
 
-                    System.out.print("\nIngrese el nombre del cliente: ");
-                    String nombreCliente = scanner.nextLine();
+        JPanel panelMasa = new JPanel(new GridLayout(1, 3, 5, 5));
+        panelMasa.setBorder(BorderFactory.createTitledBorder("Masa"));
+        JButton btnMasaArtesanal = new JButton("Artesanal");
+        JButton btnMasaClasica = new JButton("Clasica");
+        JButton btnMasaDelgada = new JButton("Delgada");
+        panelMasa.add(btnMasaArtesanal);
+        panelMasa.add(btnMasaClasica);
+        panelMasa.add(btnMasaDelgada);
 
-                    System.out.println("\nSeleccione tipo de masa:");
-                    System.out.println("1. Artesanal");
-                    System.out.println("2. Clásica");
-                    System.out.println("3. Delgada");
-                    System.out.print("Opción: ");
-                    int opcMasa = scanner.nextInt();
-                    TipoMasa masa = TipoMasa.CLASICA;
-                    if (opcMasa == 1) {
-                        masa = TipoMasa.ARTESANAL;
-                    } else if (opcMasa == 3) {
-                        masa = TipoMasa.DELGADA;
-                    }
+        JPanel panelSalsa = new JPanel(new GridLayout(1, 3, 5, 5));
+        panelSalsa.setBorder(BorderFactory.createTitledBorder("Salsa"));
+        JButton btnSalsaNormal = new JButton("Normal");
+        JButton btnSalsaPicante = new JButton("Picante");
+        JButton btnSalsaBBQ = new JButton("BBQ");
+        panelSalsa.add(btnSalsaNormal);
+        panelSalsa.add(btnSalsaPicante);
+        panelSalsa.add(btnSalsaBBQ);
 
-                    System.out.println("\nSeleccione tipo de salsa:");
-                    System.out.println("1. Normal");
-                    System.out.println("2. Picante");
-                    System.out.println("3. BBQ");
-                    System.out.print("Opción: ");
-                    int opcSalsa = scanner.nextInt();
-                    TipoSalsa salsa = TipoSalsa.NORMAL;
-                    if (opcSalsa == 2) {
-                        salsa = TipoSalsa.PICANTE;
-                    } else if (opcSalsa == 3) {
-                        salsa = TipoSalsa.BBQ;
-                    }
+        JPanel panelToppings = new JPanel(new GridLayout(2, 3, 5, 5));
+        panelToppings.setBorder(BorderFactory.createTitledBorder("Toppings"));
+        JButton btnPepperoni = new JButton("Pepperoni");
+        JButton btnCarne = new JButton("Carne");
+        JButton btnJamon = new JButton("Jamon");
+        JButton btnPina = new JButton("Pina");
+        JButton btnAceitunas = new JButton("Aceitunas");
+        JButton btnChile = new JButton("Chile Pimiento");
+        panelToppings.add(btnPepperoni);
+        panelToppings.add(btnCarne);
+        panelToppings.add(btnJamon);
+        panelToppings.add(btnPina);
+        panelToppings.add(btnAceitunas);
+        panelToppings.add(btnChile);
 
-                    Pizza nuevaPizza = new Pizza(masa, salsa);
+        JPanel panelAcciones = new JPanel(new GridLayout(1, 3, 5, 5));
+        panelAcciones.setBorder(BorderFactory.createTitledBorder("Opciones"));
+        JButton btnMandarCocina = new JButton("Mandar a Cocina");
+        JButton btnCocinar = new JButton("Cocinar Orden");
+        JButton btnVerCocina = new JButton("Ver Cocina");
+        panelAcciones.add(btnMandarCocina);
+        panelAcciones.add(btnCocinar);
+        panelAcciones.add(btnVerCocina);
 
-                    int opcTopping = -1;
-                    while (opcTopping != 0) {
-                        System.out.println("\n--- Agregar Toppings ---");
-                        System.out.println("1. Pepperoni");
-                        System.out.println("2. Carne");
-                        System.out.println("3. Jamón");
-                        System.out.println("4. Piña");
-                        System.out.println("5. Aceitunas");
-                        System.out.println("6. Chile Pimiento");
-                        System.out.println("0. Terminar ingredientes");
-                        System.out.print("Opción: ");
-                        opcTopping = scanner.nextInt();
+        JTextArea areaTexto = new JTextArea();
+        areaTexto.setEditable(false);
+        JScrollPane scroll = new JScrollPane(areaTexto);
 
-                        TipoTopping toppingElegido = null;
-                        switch (opcTopping) {
-                            case 1:
-                                toppingElegido = TipoTopping.PEPPERONI;
-                                break;
-                            case 2:
-                                toppingElegido = TipoTopping.CARNE;
-                                break;
-                            case 3:
-                                toppingElegido = TipoTopping.JAMON;
-                                break;
-                            case 4:
-                                toppingElegido = TipoTopping.PINA;
-                                break;
-                            case 5:
-                                toppingElegido = TipoTopping.ACEITUNAS;
-                                break;
-                            case 6:
-                                toppingElegido = TipoTopping.CHILE_PIMIENTO;
-                                break;
-                            case 0:
-                                break;
-                            default:
-                                System.out.println("Opción no válida.");
-                                break;
-                        }
+        JButton btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.addActionListener(e -> areaTexto.setText(""));
 
-                        if (toppingElegido != null) {
-                            System.out.print("¿Cuántas porciones de este ingrediente?: ");
-                            int porciones = scanner.nextInt();
+        panelDerecho.add(scroll, BorderLayout.CENTER);
+        panelDerecho.add(btnLimpiar, BorderLayout.SOUTH);
 
-                            if (porciones > 1) {
-                                nuevaPizza.agregarTopping(toppingElegido, porciones);
-                            } else {
-                                nuevaPizza.agregarTopping(toppingElegido);
-                            }
-                            System.out.println("-> Ingrediente agregado!");
-                        }
-                    }
+        btnMasaArtesanal.addActionListener(e -> {
+            masaActual = TipoMasa.ARTESANAL;
+            pizzaActual.setTipoMasa(masaActual);
+            areaTexto.append("Masa: Artesanal\n");
+        });
 
-                    Orden orden = new Orden(contadorOrden, nombreCliente, nuevaPizza);
-                    contadorOrden++;
+        btnMasaClasica.addActionListener(e -> {
+            masaActual = TipoMasa.CLASICA;
+            pizzaActual.setTipoMasa(masaActual);
+            areaTexto.append("Masa: Clasica\n");
+        });
 
-                    orden.mostrarResumen();
-                    cocina.recibirOrden(orden);
-                    break;
+        btnMasaDelgada.addActionListener(e -> {
+            masaActual = TipoMasa.DELGADA;
+            pizzaActual.setTipoMasa(masaActual);
+            areaTexto.append("Masa: Delgada\n");
+        });
 
-                case 2:
-                    cocina.cocinarSiguienteOrden();
-                    break;
+        btnSalsaNormal.addActionListener(e -> {
+            salsaActual = TipoSalsa.NORMAL;
+            pizzaActual.setTipoSalsa(salsaActual);
+            areaTexto.append("Salsa: Normal\n");
+        });
 
-                case 3:
-                    cocina.mostrarOrdenes();
-                    break;
+        btnSalsaPicante.addActionListener(e -> {
+            salsaActual = TipoSalsa.PICANTE;
+            pizzaActual.setTipoSalsa(salsaActual);
+            areaTexto.append("Salsa: Picante\n");
+        });
 
-                case 4:
-                    System.out.println("\n--- DEMOSTRACIÓN DE SOBRECARGA EN PIZZA ---");
-                    Pizza pizzaEjemplo = new Pizza(TipoMasa.ARTESANAL, TipoSalsa.NORMAL);
+        btnSalsaBBQ.addActionListener(e -> {
+            salsaActual = TipoSalsa.BBQ;
+            pizzaActual.setTipoSalsa(salsaActual);
+            areaTexto.append("Salsa: BBQ\n");
+        });
 
-                    System.out.println("1. agregarTopping(topping):");
-                    pizzaEjemplo.agregarTopping(TipoTopping.PEPPERONI);
+        btnPepperoni.addActionListener(e -> {
+            pizzaActual.agregarTopping(TipoTopping.PEPPERONI);
+            areaTexto.append("Topping: Pepperoni\n");
+        });
 
-                    System.out.println("2. agregarTopping(topping, cantidad):");
-                    pizzaEjemplo.agregarTopping(TipoTopping.JAMON, 2);
+        btnCarne.addActionListener(e -> {
+            pizzaActual.agregarTopping(TipoTopping.CARNE);
+            areaTexto.append("Topping: Carne\n");
+        });
 
-                    System.out.println("3. agregarTopping(arreglo):");
-                    TipoTopping[] varios = { TipoTopping.CARNE, TipoTopping.ACEITUNAS };
-                    pizzaEjemplo.agregarTopping(varios);
+        btnJamon.addActionListener(e -> {
+            pizzaActual.agregarTopping(TipoTopping.JAMON);
+            areaTexto.append("Topping: Jamon\n");
+        });
 
-                    System.out.print("Resultado final: ");
-                    pizzaEjemplo.mostrarPizza();
-                    break;
+        btnPina.addActionListener(e -> {
+            pizzaActual.agregarTopping(TipoTopping.PINA);
+            areaTexto.append("Topping: Pina\n");
+        });
 
-                case 0:
-                    System.out.println("\n¡Gracias por visitar Jack Pizza Place!");
-                    break;
+        btnAceitunas.addActionListener(e -> {
+            pizzaActual.agregarTopping(TipoTopping.ACEITUNAS);
+            areaTexto.append("Topping: Aceitunas\n");
+        });
 
-                default:
-                    System.out.println("Opción inválida, intente de nuevo.");
-                    break;
+        btnChile.addActionListener(e -> {
+            pizzaActual.agregarTopping(TipoTopping.CHILE_PIMIENTO);
+            areaTexto.append("Topping: Chile Pimiento\n");
+        });
+
+        btnMandarCocina.addActionListener(e -> {
+            if (!cocina.hayEspacio()) {
+                areaTexto.append("La cocina esta llena, no se pueden recibir mas ordenes.\n\n");
+                return;
             }
-        }
+            String nombre = txtCliente.getText();
+            if (nombre.trim().isEmpty()) {
+                nombre = "Cliente " + contadorOrden;
+            }
+            Orden orden = new Orden(contadorOrden, nombre, pizzaActual);
+            cocina.recibirOrden(orden);
 
-        scanner.close();
+            areaTexto.append("Nueva orden enviada (#" + contadorOrden + ")\n");
+            areaTexto.append("Cliente: " + nombre + "\n");
+            areaTexto.append("Masa: " + pizzaActual.getTipoMasa() + "\n");
+            areaTexto.append("Salsa: " + pizzaActual.getTipoSalsa() + "\n");
+            areaTexto.append("Toppings: " + pizzaActual.getToppings() + "\n\n");
+
+            contadorOrden++;
+            masaActual = TipoMasa.CLASICA;
+            salsaActual = TipoSalsa.NORMAL;
+            pizzaActual = new Pizza(masaActual, salsaActual);
+            txtCliente.setText("");
+        });
+
+        btnCocinar.addActionListener(e -> {
+            Orden ordenTerminada = cocina.cocinarSiguienteOrden();
+            if (ordenTerminada != null) {
+                areaTexto.append("Se cocino la orden #" + ordenTerminada.getNumeroOrden() + " de " + ordenTerminada.getCliente() + "\n\n");
+            } else {
+                areaTexto.append("No hay ordenes pendientes por cocinar.\n\n");
+            }
+        });
+
+        btnVerCocina.addActionListener(e -> {
+            if (cocina.getTotalOrdenes() == 0) {
+                areaTexto.append("No hay ordenes pendientes en la cocina.\n\n");
+            } else {
+                areaTexto.append("Ordenes pendientes (" + cocina.getTotalOrdenes() + "/5):\n");
+                Orden[] pendientes = cocina.getOrdenesPendientes();
+                for (int i = 0; i < cocina.getTotalOrdenes(); i++) {
+                    Orden ord = pendientes[i];
+                    areaTexto.append("- Orden #" + ord.getNumeroOrden() + ": " + ord.getCliente() + " | " + ord.getPizza().getToppings() + "\n");
+                }
+                areaTexto.append("\n");
+            }
+        });
+
+        panelIzquierdo.add(panelCliente);
+        panelIzquierdo.add(panelMasa);
+        panelIzquierdo.add(panelSalsa);
+        panelIzquierdo.add(panelToppings);
+        panelIzquierdo.add(panelAcciones);
+
+        ventana.add(panelIzquierdo);
+        ventana.add(panelDerecho);
+
+        ventana.setVisible(true);
     }
 }
